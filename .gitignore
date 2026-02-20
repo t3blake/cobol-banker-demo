@@ -9,6 +9,7 @@ bin/
 dist/
 build/
 out/
+obj/
 
 # IDE
 .vs/
@@ -20,8 +21,20 @@ out/
 Thumbs.db
 .DS_Store
 
-# Dependencies (language-specific — will refine once we pick a language)
+# .NET
+*.nupkg
+*.snupkg
+project.assets.json
+*.nuget.*
+
+# Dependencies
 vendor/
 node_modules/
 __pycache__/
 *.pyc
+
+# SQLite databases (local dev)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
