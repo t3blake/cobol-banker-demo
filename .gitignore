@@ -1,0 +1,27 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build output
+bin/
+dist/
+build/
+out/
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Dependencies (language-specific — will refine once we pick a language)
+vendor/
+node_modules/
+__pycache__/
+*.pyc
