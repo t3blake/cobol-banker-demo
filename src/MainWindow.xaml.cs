@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using CobolBanker.Commands;
 using CobolBanker.Data;
 using CobolBanker.Terminal;
@@ -125,8 +126,10 @@ public partial class MainWindow : Window
             PromptLabel.Text = prompt;
             InputBox.Clear();
             InputPanel.Visibility = Visibility.Visible;
-            InputBox.Focus();
             OutputScroll.ScrollToEnd();
+
+            // Schedule keyboard focus after WPF finishes layout for the newly-visible panel
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, () => Keyboard.Focus(InputBox));
         });
 
         return _inputTcs.Task.Result;
@@ -143,8 +146,9 @@ public partial class MainWindow : Window
             PromptLabel.Text = prompt;
             InputBox.Clear();
             InputPanel.Visibility = Visibility.Visible;
-            InputBox.Focus();
             OutputScroll.ScrollToEnd();
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, () => Keyboard.Focus(InputBox));
         });
 
         return _inputTcs.Task.Result;
@@ -226,6 +230,11 @@ public partial class MainWindow : Window
             _waitingForKey = false;
             _keyTcs?.TrySetResult(true);
             e.Handled = true;
+        }
+        else if (InputPanel.Visibility == Visibility.Visible)
+        {
+            // Click anywhere → redirect focus to the input box
+            Keyboard.Focus(InputBox);
         }
     }
 
