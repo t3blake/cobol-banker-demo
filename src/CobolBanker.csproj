@@ -21,6 +21,10 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
   <!-- Exclude old console entry point; WPF uses App.xaml -->
   <ItemGroup>
     <Compile Remove="Program.cs" />
