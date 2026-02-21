@@ -38,3 +38,8 @@ __pycache__/
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Intune packaging (staging + output + tool binary)
+intune/source/
+intune/output/
+intune/IntuneWinAppUtil.exe
