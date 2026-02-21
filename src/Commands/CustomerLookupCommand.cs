@@ -21,7 +21,7 @@ public static class CustomerLookupCommand
             Screen.Row("Enter 0 to return to Main Menu");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var query = Screen.Prompt("SEARCH");
             if (query == "0" || query.Equals("back", StringComparison.OrdinalIgnoreCase))
@@ -38,16 +38,16 @@ public static class CustomerLookupCommand
 
             if (results.Count == 0)
             {
-                Console.WriteLine();
+                Screen.PrintLine();
                 Screen.ErrorText("NO MATCHING CUSTOMERS FOUND");
                 Screen.PressAnyKey();
                 continue;
             }
 
             // Display results
-            Console.WriteLine();
-            Console.WriteLine($"  {results.Count} CUSTOMER(S) FOUND:");
-            Console.WriteLine();
+            Screen.PrintLine();
+            Screen.PrintLine($"  {results.Count} CUSTOMER(S) FOUND:");
+            Screen.PrintLine();
 
             Screen.TableHeader(
                 ("#", 4),
@@ -67,7 +67,7 @@ public static class CustomerLookupCommand
                 );
             }
 
-            Console.WriteLine();
+            Screen.PrintLine();
             var selection = Screen.Prompt("SELECT CUSTOMER # (0=Back)");
             if (selection == "0") continue;
 

@@ -15,14 +15,14 @@ public static class LoginCommand
             Screen.Clear();
             Screen.TopBorder();
             Screen.Row("COBOL BANKER", centered: true);
-            Screen.Row("FIRST NATIONAL BANK", centered: true);
+            Screen.Row("WOODGROVE BANK", centered: true);
             Screen.Row($"{Screen.AppVersion}", centered: true);
             Screen.Divider();
             Screen.EmptyRow();
             Screen.Row("TELLER AUTHENTICATION REQUIRED");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var username = Screen.Prompt("  USERID");
             var password = Screen.PromptPassword("  PASSWORD");
@@ -30,22 +30,22 @@ public static class LoginCommand
             var teller = db.AuthenticateTeller(username, password);
             if (teller != null)
             {
-                Console.WriteLine();
+                Screen.PrintLine();
                 Screen.SuccessText("ACCESS GRANTED");
-                Console.WriteLine($"  Welcome, {teller.DisplayName}");
-                Console.WriteLine($"  Branch: {teller.Branch}");
-                Console.WriteLine($"  Login Time: {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
+                Screen.PrintLine($"  Welcome, {teller.DisplayName}");
+                Screen.PrintLine($"  Branch: {teller.Branch}");
+                Screen.PrintLine($"  Login Time: {DateTime.Now:MM/dd/yyyy HH:mm:ss}");
                 Screen.PressAnyKey();
                 return teller;
             }
 
-            Console.WriteLine();
+            Screen.PrintLine();
             Screen.ErrorText($"INVALID CREDENTIALS (ATTEMPT {attempt}/{MAX_ATTEMPTS})");
             if (attempt < MAX_ATTEMPTS)
                 Screen.PressAnyKey();
         }
 
-        Console.WriteLine();
+        Screen.PrintLine();
         Screen.ErrorText("MAXIMUM ATTEMPTS EXCEEDED - TERMINAL LOCKED");
         Screen.PressAnyKey();
         return null;

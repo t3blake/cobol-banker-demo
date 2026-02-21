@@ -18,7 +18,7 @@ public static class SystemAdminCommand
             Screen.Row("0. Return to Main Menu");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var choice = Screen.MenuChoice("ENTER SELECTION", 0, 2);
 
@@ -40,7 +40,7 @@ public static class SystemAdminCommand
         Screen.Row("demo state. This cannot be undone.");
         Screen.EmptyRow();
         Screen.BottomBorder();
-        Console.WriteLine();
+        Screen.PrintLine();
 
         if (!Screen.Confirm("ARE YOU SURE YOU WANT TO RESET"))
         {
@@ -50,7 +50,7 @@ public static class SystemAdminCommand
         }
 
         // Double confirm — this is destructive
-        Console.WriteLine();
+        Screen.PrintLine();
         if (!Screen.Confirm("FINAL CONFIRMATION - RESET ALL DATA"))
         {
             Screen.WarningText("RESET CANCELLED");
@@ -58,13 +58,13 @@ public static class SystemAdminCommand
             return;
         }
 
-        Console.WriteLine();
-        Console.WriteLine("  Resetting database...");
+        Screen.PrintLine();
+        Screen.PrintLine("  Resetting database...");
         db.ResetDatabase();
 
-        Console.WriteLine();
+        Screen.PrintLine();
         Screen.SuccessText("DATABASE RESET COMPLETE");
-        Console.WriteLine("  All data restored to demo defaults.");
+        Screen.PrintLine("  All data restored to demo defaults.");
         Screen.PressAnyKey();
     }
 

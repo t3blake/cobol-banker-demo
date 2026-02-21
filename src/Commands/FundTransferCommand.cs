@@ -16,7 +16,7 @@ public static class FundTransferCommand
             Screen.Row("Enter 0 at any prompt to cancel");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             // Step 1: Source account
             var sourceInput = Screen.Prompt("SOURCE ACCOUNT NUMBER");
@@ -38,10 +38,10 @@ public static class FundTransferCommand
             }
 
             var sourceCustomer = db.GetCustomer(sourceAcct.CustomerId);
-            Console.WriteLine($"  Source: {sourceAcct.AccountNumber} ({sourceAcct.AccountType})");
-            Console.WriteLine($"  Owner:  {sourceCustomer?.FullName ?? "Unknown"}");
-            Console.WriteLine($"  Balance: ${sourceAcct.Balance:N2}");
-            Console.WriteLine();
+            Screen.PrintLine($"  Source: {sourceAcct.AccountNumber} ({sourceAcct.AccountType})");
+            Screen.PrintLine($"  Owner:  {sourceCustomer?.FullName ?? "Unknown"}");
+            Screen.PrintLine($"  Balance: ${sourceAcct.Balance:N2}");
+            Screen.PrintLine();
 
             // Step 2: Destination account
             var destInput = Screen.Prompt("DESTINATION ACCOUNT NUMBER");
@@ -70,10 +70,10 @@ public static class FundTransferCommand
             }
 
             var destCustomer = db.GetCustomer(destAcct.CustomerId);
-            Console.WriteLine($"  Dest:   {destAcct.AccountNumber} ({destAcct.AccountType})");
-            Console.WriteLine($"  Owner:  {destCustomer?.FullName ?? "Unknown"}");
-            Console.WriteLine($"  Balance: ${destAcct.Balance:N2}");
-            Console.WriteLine();
+            Screen.PrintLine($"  Dest:   {destAcct.AccountNumber} ({destAcct.AccountType})");
+            Screen.PrintLine($"  Owner:  {destCustomer?.FullName ?? "Unknown"}");
+            Screen.PrintLine($"  Balance: ${destAcct.Balance:N2}");
+            Screen.PrintLine();
 
             // Step 3: Amount
             var amountInput = Screen.Prompt("TRANSFER AMOUNT");
@@ -97,7 +97,7 @@ public static class FundTransferCommand
             }
 
             // Step 4: Confirmation screen
-            Console.WriteLine();
+            Screen.PrintLine();
             Screen.Header("TRANSFER CONFIRMATION");
             Screen.EmptyRow();
             Screen.Row("FROM:");
@@ -116,7 +116,7 @@ public static class FundTransferCommand
             Screen.Row($"TRANSFER AMOUNT: ${amount:N2}");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             if (!Screen.Confirm("CONFIRM TRANSFER"))
             {
@@ -129,14 +129,14 @@ public static class FundTransferCommand
             try
             {
                 db.TransferFunds(sourceAcct.AccountNumber, destAcct.AccountNumber, amount, teller.Username);
-                Console.WriteLine();
+                Screen.PrintLine();
                 Screen.SuccessText("TRANSFER COMPLETED SUCCESSFULLY");
 
                 // Show updated balances
                 var updatedSource = db.GetAccount(sourceAcct.AccountNumber)!;
                 var updatedDest = db.GetAccount(destAcct.AccountNumber)!;
-                Console.WriteLine($"  {updatedSource.AccountNumber} New Balance: ${updatedSource.Balance:N2}");
-                Console.WriteLine($"  {updatedDest.AccountNumber} New Balance: ${updatedDest.Balance:N2}");
+                Screen.PrintLine($"  {updatedSource.AccountNumber} New Balance: ${updatedSource.Balance:N2}");
+                Screen.PrintLine($"  {updatedDest.AccountNumber} New Balance: ${updatedDest.Balance:N2}");
             }
             catch (Exception ex)
             {

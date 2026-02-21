@@ -16,7 +16,7 @@ public static class TransactionHistoryCommand
             Screen.Row("Enter 0 to return to Main Menu");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var input = Screen.Prompt("ACCOUNT NUMBER");
             if (input == "0" || input.Equals("back", StringComparison.OrdinalIgnoreCase))
@@ -42,11 +42,11 @@ public static class TransactionHistoryCommand
             Screen.EmptyRow();
             Screen.BottomBorder();
 
-            Console.WriteLine();
+            Screen.PrintLine();
 
             if (transactions.Count == 0)
             {
-                Console.WriteLine("  (No transactions on file)");
+                Screen.PrintLine("  (No transactions on file)");
             }
             else
             {
@@ -68,8 +68,8 @@ public static class TransactionHistoryCommand
                     );
                 }
 
-                Console.WriteLine();
-                Console.WriteLine($"  SHOWING {transactions.Count} MOST RECENT TRANSACTIONS");
+                Screen.PrintLine();
+                Screen.PrintLine($"  SHOWING {transactions.Count} MOST RECENT TRANSACTIONS");
             }
 
             Screen.PressAnyKey();

@@ -1,26 +1,14 @@
 using System.Reflection;
+using CobolBanker.Terminal;
 
 namespace CobolBanker.Screens;
 
 /// <summary>
 /// Core rendering utilities for the green-screen terminal aesthetic.
-/// All screen output flows through here — ANSI green-on-black, box-drawing, fixed-width layouts.
+/// All screen output flows through TerminalService → WPF MainWindow.
 /// </summary>
 public static class Screen
 {
-    // ANSI escape codes
-    private const string ESC = "\x1b[";
-    private const string GREEN = $"{ESC}32m";
-    private const string BRIGHT_GREEN = $"{ESC}92m";
-    private const string DIM_GREEN = $"{ESC}2;32m";
-    private const string RED = $"{ESC}91m";
-    private const string YELLOW = $"{ESC}93m";
-    private const string BLACK_BG = $"{ESC}40m";
-    private const string RESET = $"{ESC}0m";
-    private const string BOLD = $"{ESC}1m";
-    private const string DIM = $"{ESC}2m";
-    private const string CLEAR_SCREEN = $"{ESC}2J{ESC}H";
-
     public const int WIDTH = 60;
 
     // Box-drawing characters
@@ -42,49 +30,18 @@ public static class Screen
         }
     }
 
-    /// <summary>
-    /// Initialize the terminal for green-screen mode.
-    /// </summary>
-    public static void Init()
-    {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
-        // Enable virtual terminal processing on Windows
-        Console.Write($"{BLACK_BG}{GREEN}");
-        Console.CursorVisible = true;
-        Clear();
-    }
-
-    /// <summary>
-    /// Reset terminal to normal colors on exit.
-    /// </summary>
-    public static void Shutdown()
-    {
-        Console.Write(RESET);
-        Console.Clear();
-        Console.CursorVisible = true;
-    }
-
-    public static void Clear()
-    {
-        Console.Write($"{BLACK_BG}{GREEN}{CLEAR_SCREEN}");
-    }
+    public static void Clear() => TerminalService.Clear();
 
     // ── Box rendering ───────────────────────────────────────────────
 
     public static void TopBorder()
-    {
-        Console.WriteLine($"{BRIGHT_GREEN}{TL}{new string(H, WIDTH - 2)}{TR}{GREEN}");
-    }
+        => TerminalService.WriteLine($"{TL}{new string(H, WIDTH - 2)}{TR}", TermColor.BrightGreen);
 
     public static void BottomBorder()
-    {
-        Console.WriteLine($"{BRIGHT_GREEN}{BL}{new string(H, WIDTH - 2)}{BR}{GREEN}");
-    }
+        => TerminalService.WriteLine($"{BL}{new string(H, WIDTH - 2)}{BR}", TermColor.BrightGreen);
 
     public static void Divider()
-    {
-        Console.WriteLine($"{BRIGHT_GREEN}{ML}{new string(H, WIDTH - 2)}{MR}{GREEN}");
-    }
+        => TerminalService.WriteLine($"{ML}{new string(H, WIDTH - 2)}{MR}", TermColor.BrightGreen);
 
     public static void Row(string text, bool centered = false)
     {
@@ -105,77 +62,39 @@ public static class Screen
         if (content.Length > WIDTH - 4)
             content = content[..(WIDTH - 4)];
 
-        Console.WriteLine($"{BRIGHT_GREEN}{V}{GREEN}  {content}  {BRIGHT_GREEN}{V}{GREEN}");
+        TerminalService.Write($"{V}", TermColor.BrightGreen);
+        TerminalService.Write($"  {content}  ");
+        TerminalService.WriteLine($"{V}", TermColor.BrightGreen);
     }
 
-    public static void EmptyRow()
-    {
-        Row("");
-    }
+    public static void EmptyRow() => Row("");
 
     // ── Styled text ─────────────────────────────────────────────────
 
-    public static void BrightText(string text)
-    {
-        Console.Write($"{BRIGHT_GREEN}{BOLD}{text}{RESET}{BLACK_BG}{GREEN}");
-    }
-
-    public static void DimText(string text)
-    {
-        Console.Write($"{DIM_GREEN}{text}{RESET}{BLACK_BG}{GREEN}");
-    }
-
     public static void ErrorText(string text)
-    {
-        Console.WriteLine($"{RED}  *** {text} ***{RESET}{BLACK_BG}{GREEN}");
-    }
+        => TerminalService.WriteLine($"  *** {text} ***", TermColor.Red);
 
     public static void SuccessText(string text)
-    {
-        Console.WriteLine($"{BRIGHT_GREEN}{BOLD}  >>> {text} <<<{RESET}{BLACK_BG}{GREEN}");
-    }
+        => TerminalService.WriteLine($"  >>> {text} <<<", TermColor.BrightGreen);
 
     public static void WarningText(string text)
-    {
-        Console.WriteLine($"{YELLOW}  !!! {text} !!!{RESET}{BLACK_BG}{GREEN}");
-    }
+        => TerminalService.WriteLine($"  !!! {text} !!!", TermColor.Yellow);
+
+    // ── Console-replacement convenience methods ─────────────────────
+
+    public static void Print(string text)
+        => TerminalService.Write(text);
+
+    public static void PrintLine(string text = "")
+        => TerminalService.WriteLine(text);
 
     // ── Input ───────────────────────────────────────────────────────
 
     public static string Prompt(string label)
-    {
-        Console.Write($"{GREEN}{label}: {BRIGHT_GREEN}");
-        var input = Console.ReadLine()?.Trim() ?? "";
-        Console.Write(GREEN);
-        return input;
-    }
+        => TerminalService.ReadLine($"{label}: ");
 
     public static string PromptPassword(string label)
-    {
-        Console.Write($"{GREEN}{label}: {BRIGHT_GREEN}");
-        var password = "";
-        while (true)
-        {
-            var key = Console.ReadKey(intercept: true);
-            if (key.Key == ConsoleKey.Enter)
-            {
-                Console.WriteLine();
-                break;
-            }
-            if (key.Key == ConsoleKey.Backspace && password.Length > 0)
-            {
-                password = password[..^1];
-                Console.Write("\b \b");
-            }
-            else if (!char.IsControl(key.KeyChar))
-            {
-                password += key.KeyChar;
-                Console.Write("*");
-            }
-        }
-        Console.Write(GREEN);
-        return password;
-    }
+        => TerminalService.ReadPassword($"{label}: ");
 
     public static int MenuChoice(string prompt, int min, int max)
     {
@@ -196,10 +115,9 @@ public static class Screen
 
     public static void PressAnyKey()
     {
-        Console.WriteLine();
-        DimText("  Press any key to continue...");
-        Console.ReadKey(intercept: true);
-        Console.WriteLine();
+        TerminalService.WriteLine();
+        TerminalService.WriteLine("  Press any key to continue...", TermColor.DimGreen);
+        TerminalService.ReadKey();
     }
 
     // ── Header/footer helpers ───────────────────────────────────────
@@ -234,8 +152,8 @@ public static class Screen
             line += label.PadRight(width);
             separator += new string('-', width);
         }
-        Console.WriteLine($"{BRIGHT_GREEN}{BOLD}{line}{RESET}{BLACK_BG}{GREEN}");
-        Console.WriteLine($"{DIM_GREEN}{separator}{RESET}{BLACK_BG}{GREEN}");
+        TerminalService.WriteLine(line, TermColor.BrightGreen);
+        TerminalService.WriteLine(separator, TermColor.DimGreen);
     }
 
     public static void TableRow(params (string value, int width)[] columns)
@@ -246,6 +164,6 @@ public static class Screen
             var val = value.Length > width - 1 ? value[..(width - 2)] + "~" : value;
             line += val.PadRight(width);
         }
-        Console.WriteLine(line);
+        TerminalService.WriteLine(line);
     }
 }

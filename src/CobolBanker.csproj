@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
     <RootNamespace>CobolBanker</RootNamespace>
     <AssemblyName>cobol-banker</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Single-file self-contained publish -->
@@ -17,6 +18,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.12" />
+  </ItemGroup>
+
+  <!-- Exclude old console entry point; WPF uses App.xaml -->
+  <ItemGroup>
+    <Compile Remove="Program.cs" />
   </ItemGroup>
 
 </Project>

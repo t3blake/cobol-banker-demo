@@ -19,7 +19,7 @@ public static class AccountMaintenanceCommand
             Screen.Row("0. Return to Main Menu");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var choice = Screen.MenuChoice("ENTER SELECTION", 0, 3);
 
@@ -40,7 +40,7 @@ public static class AccountMaintenanceCommand
         Screen.Row("Enter 0 to cancel");
         Screen.EmptyRow();
         Screen.BottomBorder();
-        Console.WriteLine();
+        Screen.PrintLine();
 
         var acctInput = Screen.Prompt("ACCOUNT NUMBER");
         if (acctInput == "0") return;
@@ -54,17 +54,17 @@ public static class AccountMaintenanceCommand
         }
 
         var customer = db.GetCustomer(account.CustomerId);
-        Console.WriteLine();
-        Console.WriteLine($"  Account:  {account.AccountNumber} ({account.AccountType})");
-        Console.WriteLine($"  Owner:    {customer?.FullName ?? "Unknown"}");
-        Console.WriteLine($"  Balance:  ${account.Balance:N2}");
-        Console.WriteLine($"  Status:   {account.Status}");
-        Console.WriteLine();
-        Console.WriteLine("  Available statuses:");
-        Console.WriteLine("    1. Active");
-        Console.WriteLine("    2. Frozen");
-        Console.WriteLine("    3. Closed");
-        Console.WriteLine();
+        Screen.PrintLine();
+        Screen.PrintLine($"  Account:  {account.AccountNumber} ({account.AccountType})");
+        Screen.PrintLine($"  Owner:    {customer?.FullName ?? "Unknown"}");
+        Screen.PrintLine($"  Balance:  ${account.Balance:N2}");
+        Screen.PrintLine($"  Status:   {account.Status}");
+        Screen.PrintLine();
+        Screen.PrintLine("  Available statuses:");
+        Screen.PrintLine("    1. Active");
+        Screen.PrintLine("    2. Frozen");
+        Screen.PrintLine("    3. Closed");
+        Screen.PrintLine();
 
         var statusChoice = Screen.MenuChoice("NEW STATUS", 1, 3);
         var newStatus = statusChoice switch
@@ -77,12 +77,12 @@ public static class AccountMaintenanceCommand
 
         if (newStatus == account.Status)
         {
-            Console.WriteLine($"  Account is already {account.Status}.");
+            Screen.PrintLine($"  Account is already {account.Status}.");
             Screen.PressAnyKey();
             return;
         }
 
-        Console.WriteLine();
+        Screen.PrintLine();
         if (!Screen.Confirm($"CHANGE STATUS FROM {account.Status.ToUpper()} TO {newStatus.ToUpper()}"))
         {
             Screen.WarningText("STATUS CHANGE CANCELLED");
@@ -94,7 +94,7 @@ public static class AccountMaintenanceCommand
         db.AddNote(account.AccountNumber, teller.Username,
             $"Account status changed from {account.Status} to {newStatus} by {teller.DisplayName}");
 
-        Console.WriteLine();
+        Screen.PrintLine();
         Screen.SuccessText($"ACCOUNT STATUS CHANGED TO {newStatus.ToUpper()}");
         Screen.PressAnyKey();
     }
@@ -107,7 +107,7 @@ public static class AccountMaintenanceCommand
         Screen.Row("Enter 0 to cancel");
         Screen.EmptyRow();
         Screen.BottomBorder();
-        Console.WriteLine();
+        Screen.PrintLine();
 
         var input = Screen.Prompt("CUSTOMER ID");
         if (input == "0") return;
@@ -130,11 +130,11 @@ public static class AccountMaintenanceCommand
             }
             else
             {
-                Console.WriteLine();
+                Screen.PrintLine();
                 for (int i = 0; i < results.Count; i++)
-                    Console.WriteLine($"  {i + 1}. {results[i].CustomerId} - {results[i].FullName}");
+                    Screen.PrintLine($"  {i + 1}. {results[i].CustomerId} - {results[i].FullName}");
 
-                Console.WriteLine();
+                Screen.PrintLine();
                 var sel = Screen.Prompt("SELECT CUSTOMER #");
                 if (int.TryParse(sel, out int idx) && idx >= 1 && idx <= results.Count)
                     customer = results[idx - 1];
@@ -147,13 +147,13 @@ public static class AccountMaintenanceCommand
             }
         }
 
-        Console.WriteLine();
-        Console.WriteLine($"  Customer:  {customer.FullName} ({customer.CustomerId})");
-        Console.WriteLine($"  Phone:     {customer.Phone}");
-        Console.WriteLine($"  Address:   {customer.Address}");
-        Console.WriteLine();
-        Console.WriteLine("  Enter new values (press ENTER to keep current):");
-        Console.WriteLine();
+        Screen.PrintLine();
+        Screen.PrintLine($"  Customer:  {customer.FullName} ({customer.CustomerId})");
+        Screen.PrintLine($"  Phone:     {customer.Phone}");
+        Screen.PrintLine($"  Address:   {customer.Address}");
+        Screen.PrintLine();
+        Screen.PrintLine("  Enter new values (press ENTER to keep current):");
+        Screen.PrintLine();
 
         var newPhone = Screen.Prompt($"  PHONE [{customer.Phone}]");
         if (string.IsNullOrWhiteSpace(newPhone)) newPhone = customer.Phone;
@@ -163,18 +163,18 @@ public static class AccountMaintenanceCommand
 
         if (newPhone == customer.Phone && newAddress == customer.Address)
         {
-            Console.WriteLine("  No changes made.");
+            Screen.PrintLine("  No changes made.");
             Screen.PressAnyKey();
             return;
         }
 
-        Console.WriteLine();
-        Console.WriteLine("  Updated values:");
+        Screen.PrintLine();
+        Screen.PrintLine("  Updated values:");
         if (newPhone != customer.Phone)
-            Console.WriteLine($"    Phone:   {customer.Phone} → {newPhone}");
+            Screen.PrintLine($"    Phone:   {customer.Phone} → {newPhone}");
         if (newAddress != customer.Address)
-            Console.WriteLine($"    Address: {customer.Address} → {newAddress}");
-        Console.WriteLine();
+            Screen.PrintLine($"    Address: {customer.Address} → {newAddress}");
+        Screen.PrintLine();
 
         if (!Screen.Confirm("CONFIRM CHANGES"))
         {
@@ -197,7 +197,7 @@ public static class AccountMaintenanceCommand
             db.AddNote(acct.AccountNumber, teller.Username, noteText);
         }
 
-        Console.WriteLine();
+        Screen.PrintLine();
         Screen.SuccessText("CUSTOMER CONTACT INFO UPDATED");
         Screen.PressAnyKey();
     }
@@ -209,7 +209,7 @@ public static class AccountMaintenanceCommand
         Screen.Row("Enter 0 to cancel");
         Screen.EmptyRow();
         Screen.BottomBorder();
-        Console.WriteLine();
+        Screen.PrintLine();
 
         var acctInput = Screen.Prompt("ACCOUNT NUMBER");
         if (acctInput == "0") return;
@@ -223,24 +223,24 @@ public static class AccountMaintenanceCommand
         }
 
         var customer = db.GetCustomer(account.CustomerId);
-        Console.WriteLine();
-        Console.WriteLine($"  Account:  {account.AccountNumber} ({account.AccountType})");
-        Console.WriteLine($"  Owner:    {customer?.FullName ?? "Unknown"}");
-        Console.WriteLine($"  Status:   {account.Status}");
-        Console.WriteLine();
+        Screen.PrintLine();
+        Screen.PrintLine($"  Account:  {account.AccountNumber} ({account.AccountType})");
+        Screen.PrintLine($"  Owner:    {customer?.FullName ?? "Unknown"}");
+        Screen.PrintLine($"  Status:   {account.Status}");
+        Screen.PrintLine();
 
         // Show existing notes
         var existingNotes = db.GetNotes(account.AccountNumber);
         if (existingNotes.Count > 0)
         {
-            Console.WriteLine("  EXISTING NOTES:");
+            Screen.PrintLine("  EXISTING NOTES:");
             foreach (var n in existingNotes.Take(3))
             {
-                Console.WriteLine($"    [{n.CreatedDate}] {n.CreatedBy}: {n.NoteText}");
+                Screen.PrintLine($"    [{n.CreatedDate}] {n.CreatedBy}: {n.NoteText}");
             }
             if (existingNotes.Count > 3)
-                Console.WriteLine($"    ... and {existingNotes.Count - 3} more");
-            Console.WriteLine();
+                Screen.PrintLine($"    ... and {existingNotes.Count - 3} more");
+            Screen.PrintLine();
         }
 
         var noteText = Screen.Prompt("NOTE TEXT");
@@ -253,7 +253,7 @@ public static class AccountMaintenanceCommand
 
         db.AddNote(account.AccountNumber, teller.Username, noteText);
 
-        Console.WriteLine();
+        Screen.PrintLine();
         Screen.SuccessText("NOTE ADDED SUCCESSFULLY");
         Screen.PressAnyKey();
     }

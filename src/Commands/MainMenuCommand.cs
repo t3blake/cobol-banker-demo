@@ -7,7 +7,7 @@ public static class MainMenuCommand
 {
     public static int Run(Teller teller)
     {
-        Screen.Header("COBOL BANKER — MAIN TERMINAL", $"FIRST NATIONAL BANK  {Screen.AppVersion}");
+        Screen.Header("COBOL BANKER — MAIN TERMINAL", $"WOODGROVE BANK  {Screen.AppVersion}");
         Screen.EmptyRow();
         Screen.Row("1. Customer Lookup");
         Screen.Row("2. Account Inquiry");
@@ -19,7 +19,7 @@ public static class MainMenuCommand
         Screen.Row("9. Log Off");
         Screen.EmptyRow();
         Screen.StatusBar(teller.DisplayName, teller.Branch);
-        Console.WriteLine();
+        Screen.PrintLine();
 
         return Screen.MenuChoice("ENTER SELECTION", 1, 9);
     }

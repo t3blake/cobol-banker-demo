@@ -16,7 +16,7 @@ public static class AccountInquiryCommand
             Screen.Row("Enter 0 to return to Main Menu");
             Screen.EmptyRow();
             Screen.BottomBorder();
-            Console.WriteLine();
+            Screen.PrintLine();
 
             var input = Screen.Prompt("ACCOUNT/CUSTOMER ID");
             if (input == "0" || input.Equals("back", StringComparison.OrdinalIgnoreCase))
@@ -49,9 +49,9 @@ public static class AccountInquiryCommand
                 }
 
                 // Multiple accounts — let user pick
-                Console.WriteLine();
-                Console.WriteLine($"  ACCOUNTS FOR {customer.FullName}:");
-                Console.WriteLine();
+                Screen.PrintLine();
+                Screen.PrintLine($"  ACCOUNTS FOR {customer.FullName}:");
+                Screen.PrintLine();
                 Screen.TableHeader(
                     ("#", 4),
                     ("ACCOUNT #", 14),
@@ -72,7 +72,7 @@ public static class AccountInquiryCommand
                     );
                 }
 
-                Console.WriteLine();
+                Screen.PrintLine();
                 var sel = Screen.Prompt("SELECT ACCOUNT # (0=Back)");
                 if (sel == "0") continue;
                 if (int.TryParse(sel, out int idx) && idx >= 1 && idx <= accounts.Count)
