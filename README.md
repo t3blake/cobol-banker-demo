@@ -10,6 +10,9 @@ COBOL Banker is a single-file executable that mimics the kind of text-based bank
 
 It's designed as a demo prop to showcase how a Copilot agent can read terminal output, navigate menus, and perform workflows in a locally installed application.
 
+<img width="901" height="708" alt="image" src="https://github.com/user-attachments/assets/674b2d13-c5f7-46be-a50c-b2c5c9b3e151" />
+
+
 ## Features (Planned)
 
 - Simulated teller login
