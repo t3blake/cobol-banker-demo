@@ -1,13 +1,13 @@
 # ─────────────────────────────────────────────────────────────
 # Woodgrove Bank Terminal — Intune Install Script
-# Runs in SYSTEM context. Installs to Program Files and
+# Runs in SYSTEM context. Installs to C:\WoodgroveBank and
 # creates a desktop shortcut for all users.
 # ─────────────────────────────────────────────────────────────
 
 $ErrorActionPreference = "Stop"
 
 $appName    = "Woodgrove Bank Terminal"
-$installDir = "$env:ProgramFiles\WoodgroveBank"
+$installDir = "C:\WoodgroveBank"
 $exeName    = "cobol-banker.exe"
 $dbName     = "cobol-banker.db"
 $srcExe     = Join-Path $PSScriptRoot $exeName

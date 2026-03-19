@@ -4,7 +4,7 @@
 
 | File | Purpose |
 |------|---------|
-| `Install.ps1` | Install script — copies exe to `%ProgramFiles%\WoodgroveBank`, creates Public Desktop shortcut |
+| `Install.ps1` | Install script — copies exe to `C:\WoodgroveBank`, creates Public Desktop shortcut |
 | `Uninstall.ps1` | Uninstall script — kills process, removes folder and shortcut |
 | `Detect.ps1` | Detection script — checks for exe in install path |
 

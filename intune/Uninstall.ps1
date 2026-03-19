@@ -6,7 +6,7 @@
 $ErrorActionPreference = "SilentlyContinue"
 
 $appName    = "Woodgrove Bank Terminal"
-$installDir = "$env:ProgramFiles\WoodgroveBank"
+$installDir = "C:\WoodgroveBank"
 $shortcut   = Join-Path "$env:Public\Desktop" "$appName.lnk"
 
 Write-Host "Uninstalling $appName..."

@@ -13,7 +13,7 @@ The app does **not** launch automatically — the agent must open it. The most r
 | Step | Agent Action |
 |------|-------------|
 | 1 | Press **Win+R** to open the Run dialog |
-| 2 | Type: `"C:\Program Files\WoodgroveBank\cobol-banker.exe"` (include quotes — the path has a space) |
+| 2 | Type: `C:\WoodgroveBank\cobol-banker.exe` |
 | 3 | Press **Enter** |
 | 4 | Wait for the window titled **"Woodgrove Bank — Terminal Emulator"** to appear |
 | 5 | Click the window to ensure it has focus |
@@ -51,7 +51,7 @@ Once the window is open and focused, proceed to the Login Screen (Section 3.1).
 
 - **Exe name:** `cobol-banker.exe`
 - **Window title:** `Woodgrove Bank — Terminal Emulator`
-- **Install path (Intune):** `C:\Program Files\WoodgroveBank\cobol-banker.exe`
+- **Install path (Intune):** `C:\WoodgroveBank\cobol-banker.exe`
 - **Desktop shortcut:** `C:\Users\Public\Desktop\Woodgrove Bank Terminal.lnk` (label on desktop: **"Woodgrove Bank Terminal"**)
 - **Database:** `cobol-banker.db` (SQLite, auto-created next to the exe on first run)
 
