@@ -1,7 +1,7 @@
 # COBOL Banker — Demo Walkthrough
 
 > **Audience:** CSAs running live demos for customers.
-> **Pre-req:** Launch `cobol-banker.exe` — the green-screen terminal window appears automatically.
+> **Pre-req:** COBOL Banker must be installed on the target machine (see [README.md](README.md) for setup). Launch it via `Win+R` → `C:\WoodgroveBank\cobol-banker.exe`, or double-click the **"Woodgrove Bank Terminal"** desktop shortcut.
 > **Reset between demos:** Log in → Menu option `8` (System Admin) → `1` (Reset Database) → confirm twice. This restores all seed data to its original state.
 
 ---

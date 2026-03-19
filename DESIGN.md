@@ -1,6 +1,8 @@
 # COBOL Banker — Legacy Banking Terminal Simulator
 
-## Design Document (Draft v0.1)
+## Design Document
+
+> **Note:** This was originally a pre-build design spec. The app has since been built with some architectural pivots (WPF instead of console, Intune instead of zip distribution). This document has been updated to reflect the final implementation while preserving the design rationale.
 
 ---
 
@@ -147,7 +149,7 @@ Derived from the three scenarios above:
 ```
 ╔══════════════════════════════════════════════════╗
 ║         COBOL BANKER — MAIN TERMINAL             ║
-║           FIRST NATIONAL BANK  v1.0.0            ║
+║           WOODGROVE BANK  v1.1.0                 ║
 ╠══════════════════════════════════════════════════╣
 ║  1. Customer Lookup                              ║
 ║  2. Account Inquiry                              ║
@@ -183,27 +185,30 @@ The "About" screen displays: app name, version number, build date, and schema ve
 
 ### 5.1 Technology Choice
 
-> **Decision: C# / .NET 8+ with Native AOT publishing**
+> **Decision: C# / .NET 8 with WPF and single-file self-contained publishing**
 
 | Aspect | Detail |
 |--------|--------|
-| **Language** | C# (.NET 8 or 9) |
-| **Publish mode** | `dotnet publish -c Release -r win-x64 --self-contained /p:PublishAot=true` — produces a single native exe, no .NET runtime needed on target machine |
-| **SQLite library** | `Microsoft.Data.Sqlite` (first-party, lightweight, works with AOT) |
-| **Terminal rendering** | Raw `Console.Write` with ANSI escape codes — no TUI framework needed for menu-driven screens |
-| **Project type** | Console application, single project, no solution file complexity |
+| **Language** | C# (.NET 8) |
+| **UI Framework** | WPF — desktop GUI styled to look like a green-screen terminal |
+| **Publish mode** | `dotnet publish -c Release -r win-x64 --self-contained /p:PublishSingleFile=true` — produces a single self-contained exe, no .NET runtime needed on target machine |
+| **SQLite library** | `Microsoft.Data.Sqlite` v8.0.12 (first-party, lightweight) |
+| **Terminal rendering** | WPF `TextBlock` with colored `Run` elements inside a `ScrollViewer`, styled with Consolas 14pt green-on-black |
+| **Project type** | WPF application, single project |
 
 **Why C# / .NET:**
 - Familiar to enterprise demo audiences and the coworkers who'll run it
-- AOT produces a true native exe — no runtime pre-install required
+- Single-file publish produces one exe — no runtime pre-install required
 - `Microsoft.Data.Sqlite` is a first-party, well-supported SQLite wrapper
-- `Console` class + ANSI escapes give us full green-screen control
+- WPF gives precise control over the green-screen aesthetic (font, colors, box-drawing characters)
 - Strong tooling in VS Code with C# Dev Kit
 
-**AOT considerations:**
-- Some reflection-heavy libraries don't work with AOT — we'll avoid those
-- `Microsoft.Data.Sqlite` with the `SQLitePCLRaw.bundle_e_sqlite3` provider works under AOT
-- Binary size will be ~15-30 MB (acceptable for a demo tool)
+**Why WPF instead of Console (design pivot):**
+The original plan was raw console with ANSI escape codes. During implementation, WPF was chosen because:
+- Computer-use agents interact with GUI windows, not terminal sessions
+- WPF allows pixel-perfect control of the terminal aesthetic
+- The input model (TextBox vs. any-key) maps cleanly to two distinct visual states the agent can detect
+- Window title is always visible for the agent to identify the app
 
 ### 5.2 Data Layer — SQLite
 
@@ -361,35 +366,38 @@ Schema_Version
 
 ### 5.8 Distribution Strategy
 
-> **Decision: Ship a pre-seeded database in the zip.**
+> **Decision: Intune Win32 app package (.intunewin)**
 
-The distribution artifact is a **zip file** containing:
+The distribution artifact is an **Intune Win32 app package** containing:
 
 ```
-cobol-banker/
+Install.intunewin (packaged from:)
   cobol-banker.exe      ← the binary
-  cobol-banker.db        ← pre-seeded SQLite database with demo content
-  README.txt             ← one-paragraph quick start
+  cobol-banker.db       ← pre-seeded SQLite database with demo content
+  Install.ps1           ← install script
+  Uninstall.ps1         ← uninstall script
 ```
 
-**Why pre-seeded, not auto-generated:**
-- Coworkers unzip, double-click the exe, and immediately have a working demo with realistic data
-- No "first run" setup delay or output noise — the terminal goes straight to the login screen
-- Seed data can be carefully curated to tell a coherent story (e.g., customers with interesting account states, pending transfers, notes from prior sessions)
-- The "reset" command inside the app restores the DB to this exact curated state
+The app installs to `C:\WoodgroveBank\` and creates a desktop shortcut + taskbar pin.
 
-**Fallback behavior:** If the `.db` file is missing or corrupt, the app auto-creates a fresh one with the same seed data and prints a notice. This means the exe still works standalone — the pre-seeded DB is a convenience, not a hard dependency.
+**Why Intune instead of ZIP (design pivot):**
+The original plan was a simple zip distribution. Intune was chosen because:
+- The primary target is Windows 365 Cloud PCs managed by Intune
+- Automated deployment with no manual steps on the target machine
+- Detection rules verify the app is installed correctly
+- Supersedence handles upgrades cleanly
+- Uninstall is managed centrally
 
-**Installer option (if needed later):** If the zip approach causes friction (e.g., people don't know where to extract it, or antivirus flags loose exes), we can wrap it in a lightweight installer (e.g., Inno Setup or WiX) that does one thing: extract files to `C:\COBOLBanker\` and create a Start Menu shortcut. Single "Install" button, no config screens.
+See [intune/README.md](intune/README.md) for packaging details.
 
 ---
 
 ## 6. What This App Is NOT
 
 - Not a real banking system — no real security, no encryption, demo-grade data only
-- Not a TUI framework showcase — no mouse, no scrolling, no colors beyond basic ANSI
-- Not an API — the only interface is stdin/stdout in a terminal
-- Not multi-user — single session, single terminal
+- Not a console application — it's a WPF GUI styled to look like a terminal
+- Not an API — the only interface is the WPF window
+- Not multi-user — single session, single window
 - Not cloud-dependent — runs fully offline with local SQLite
 
 ---
@@ -399,26 +407,36 @@ cobol-banker/
 | # | Topic | Decision |
 |---|-------|----------|
 | D1 | **Data persistence** | SQLite embedded database, single `.db` file next to the exe |
-| D2 | **Distribution** | Zip file with exe + pre-seeded `.db` + README. Installer only if zip causes friction. |
+| D2 | **Distribution** | Intune Win32 app package (.intunewin). Installs to `C:\WoodgroveBank\`. |
 | D3 | **Seed data** | Ship pre-loaded with curated demo content. App can also self-seed if DB is missing. |
 | D4 | **Cloud / Azure** | Not needed. Fully local. Door open for future cloud mode if compelling. |
-| D5 | **Language / runtime** | C# / .NET 8+ with Native AOT publish. Single exe, no runtime required on target. |
-| D6 | **Green-screen aesthetics** | Yes — ANSI green-on-black coloring, box-drawing characters, retro look is a core principle. |
-| D7 | **Agent interaction model** | Pure legacy terminal via stdin/stdout. No special machine-readable mode. Designed for Windows 365 Agent "computer-do" style screen-reading interaction. |
+| D5 | **Language / runtime** | C# / .NET 8 with WPF. Single-file self-contained publish. No runtime required on target. |
+| D6 | **Green-screen aesthetics** | Yes — WPF styled with Consolas 14pt green-on-black, box-drawing characters, retro look is a core principle. |
+| D7 | **Agent interaction model** | WPF desktop GUI operated by a Windows 365 computer-use agent via screen reading and keyboard/mouse input. |
 | D8 | **Demo scenarios** | Three core scenarios: (1) Find & freeze flagged account, (2) Process address change, (3) Fund transfer. Feature set derived from these. |
 | D9 | **Versioning** | Semantic versioning via `.csproj` `<Version>`. Displayed on main menu and About screen. DB schema versioned separately with migration support. |
 | D10 | **Extensibility** | Menu-driven architecture, self-contained screen functions, data-driven menus, sequential DB migrations. New features = new files, not rewrites. |
 
-## 8. Open Questions
+## 8. Design Pivots
 
-*None at this time — ready to build v1.0.0.*
+Decisions that changed during implementation:
+
+| Original Plan | What Changed | Why |
+|--------------|-------------|-----|
+| Console app with ANSI escape codes | WPF desktop app | Computer-use agents interact with GUI windows, not terminal sessions. WPF gives better control over visual states. |
+| Native AOT publish | Single-file self-contained publish | AOT had compatibility issues with some dependencies. Single-file publish is simpler and still produces one exe. |
+| ZIP distribution | Intune Win32 package | Primary target is managed Windows 365 Cloud PCs. Intune handles deployment, detection, and uninstall. |
+| Install to `C:\Program Files\WoodgroveBank` | Install to `C:\WoodgroveBank` | The space in "Program Files" caused quoting issues for computer-use agents typing the path. |
 
 ## 9. Version History
 
 | Version | What's Included |
 |---------|----------------|
-| **v1.0.0** (planned) | Login, Customer Lookup, Account Inquiry, Transaction History, Fund Transfer, Account Maintenance (status, contact, notes), System Admin (reset, about). Supports all 3 demo scenarios. |
+| **v1.0.0** | Login, Customer Lookup, Account Inquiry, Transaction History, Fund Transfer, Account Maintenance (status, contact, notes), System Admin (reset, about). Supports all 3 demo scenarios. |
+| **v1.1.0** | Current app version. Refined UI, seed data, agent guide documentation. |
+| **v1.1.1** | Added app launch instructions to AGENT-GUIDE.md, taskbar pin in installer. |
+| **v1.2.0** | Moved install path to `C:\WoodgroveBank`. Added Copilot Studio doc split (KNOWLEDGE.md, AGENT-INSTRUCTIONS.md, CUA-TOOL-INSTRUCTIONS.md). |
 
 ---
 
-*This document is a living draft. Let's iterate until we're aligned, then start building.*
+*This document captures the design rationale and decisions for COBOL Banker. For current operational details, see [AGENT-GUIDE.md](AGENT-GUIDE.md) and [README.md](README.md).*
