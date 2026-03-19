@@ -14,15 +14,27 @@
 
 ### Step-by-Step: Create an Evaluation
 
+**Option A — Import the CSV (recommended):**
+
 1. Open your agent in **Copilot Studio** (https://copilotstudio.microsoft.com).
 2. In the left navigation, click **Evaluate**.
 3. Click **+ New evaluation** at the top.
-4. Give it a name (e.g., "COBOL Banker — Full Regression").
-5. For each test case below, add a row:
-   - **Input**: Copy the prompt from the **Input** field in the test case.
-   - **Expected output**: Copy the **Pass criteria** text — this is what the AI-assisted scorer will compare against.
-6. Click **Run** to execute all test cases against the agent.
-7. Review results — Copilot Studio will show each test with a pass/fail assessment and the agent's actual response.
+4. Click **Import** and select [`evaluation.csv`](evaluation.csv) from this folder.
+   - The CSV contains 22 pre-built test cases with questions and expected responses.
+5. Give the evaluation a name (e.g., "COBOL Banker — Full Regression").
+6. Configure test methods if desired (match, similarity, compare meaning). The default test method is applied automatically on import.
+7. Click **Run** to execute all test cases against the agent.
+8. Review results — Copilot Studio will show each test with a pass/fail assessment and the agent's actual response.
+
+**Option B — Add test cases manually:**
+
+1. Open your agent in **Copilot Studio** → **Evaluate** → **+ New evaluation**.
+2. For each test case in this document, add a row:
+   - **Input**: Copy the prompt from the **Input** field.
+   - **Expected output**: Copy the **Pass criteria** text.
+3. Click **Run** and review results.
+
+> **CSV limitations:** Max 100 questions, max 500 characters per question. The CSV includes all tests that can be expressed as a single question/response pair. Tests with pre-conditions (like 8.1 — app not running) are included but may need the pre-condition set up manually before running.
 
 ### Tips for Effective Evaluations
 
