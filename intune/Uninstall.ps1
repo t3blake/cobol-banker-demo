@@ -20,6 +20,13 @@ if (Test-Path $shortcut) {
     Write-Host "  Removed desktop shortcut"
 }
 
+# Remove taskbar pin
+$taskbarPin = "$env:AppData\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\$appName.lnk"
+if (Test-Path $taskbarPin) {
+    Remove-Item $taskbarPin -Force
+    Write-Host "  Removed taskbar pin"
+}
+
 # Remove install directory
 if (Test-Path $installDir) {
     Remove-Item $installDir -Recurse -Force

@@ -4,14 +4,55 @@
 
 ---
 
+## 0. Launching the Application
+
+The app does **not** launch automatically — the agent must open it. The most reliable method is the **Windows Run dialog**, which avoids the need to visually scan the desktop for an icon.
+
+### Recommended: Windows Run Dialog
+
+| Step | Agent Action |
+|------|-------------|
+| 1 | Press **Win+R** to open the Run dialog |
+| 2 | Type: `"C:\Program Files\WoodgroveBank\cobol-banker.exe"` (include quotes — the path has a space) |
+| 3 | Press **Enter** |
+| 4 | Wait for the window titled **"Woodgrove Bank — Terminal Emulator"** to appear |
+| 5 | Click the window to ensure it has focus |
+
+### Alternative: Desktop Shortcut
+
+If using the desktop shortcut instead:
+
+| Step | Agent Action |
+|------|-------------|
+| 1 | Minimize all windows (press **Win+D**) to expose the desktop |
+| 2 | Locate the shortcut icon labeled **"Woodgrove Bank Terminal"** |
+| 3 | **Double-click** the shortcut |
+| 4 | Wait for the window titled **"Woodgrove Bank — Terminal Emulator"** to appear |
+
+> **Important:** The desktop shortcut is called **"Woodgrove Bank Terminal"** — not "COBOL Banker". The agent must look for that exact label. The taskbar/window title will show **"Woodgrove Bank — Terminal Emulator"** once launched.
+
+### Alternative: Taskbar Pin
+
+If COBOL Banker has been pinned to the taskbar, the agent can simply click the pinned icon. Look for the app icon in the taskbar.
+
+### Verifying the App Is Running
+
+- **Window title:** `Woodgrove Bank — Terminal Emulator`
+- **Process name:** `cobol-banker`
+- **Visual confirmation:** A black window with bright green text and a login prompt
+
+Once the window is open and focused, proceed to the Login Screen (Section 3.1).
+
+---
+
 ## 1. Application Overview
 
-**COBOL Banker** is a WPF desktop application that simulates a legacy green-screen banking terminal. It is installed locally on a Windows machine and launched via a desktop shortcut or exe. The app is a single-window GUI — not a real console — disguised to look like a mainframe terminal.
+**COBOL Banker** is a WPF desktop application that simulates a legacy green-screen banking terminal. It is installed locally on a Windows machine and launched via the Run dialog, a desktop shortcut, or the exe directly. The app is a single-window GUI — not a real console — disguised to look like a mainframe terminal.
 
 - **Exe name:** `cobol-banker.exe`
 - **Window title:** `Woodgrove Bank — Terminal Emulator`
 - **Install path (Intune):** `C:\Program Files\WoodgroveBank\cobol-banker.exe`
-- **Desktop shortcut:** `C:\Users\Public\Desktop\Woodgrove Bank Terminal.lnk`
+- **Desktop shortcut:** `C:\Users\Public\Desktop\Woodgrove Bank Terminal.lnk` (label on desktop: **"Woodgrove Bank Terminal"**)
 - **Database:** `cobol-banker.db` (SQLite, auto-created next to the exe on first run)
 
 ### Why This App Exists
@@ -90,7 +131,7 @@ The agent must distinguish between two states:
 
 ### 3.1 Login Screen
 
-**Trigger:** App launch (automatic first screen)
+**Trigger:** App launch (automatic first screen — see Section 0 for how to launch)
 
 **Screen content:**
 ```
@@ -588,7 +629,10 @@ dotnet publish -c Release -r win-x64 --self-contained /p:PublishSingleFile=true 
 The full app state machine for the agent to track:
 
 ```
-[App Launch]
+[LAUNCH APP] (Section 0: Win+R or desktop shortcut)
+    │
+    ▼
+[App Window Opens]
     │
     ▼
 [LOGIN] ──(3 failures)──▶ [EXIT]

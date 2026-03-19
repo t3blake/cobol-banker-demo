@@ -23,6 +23,7 @@ Run the packaging steps below, or use the pre-built `output/Install.intunewin` i
    ```powershell
    New-Item -ItemType Directory -Path intune\source -Force
    Copy-Item dist\cobol-banker.exe intune\source\
+   Copy-Item dist\cobol-banker.db  intune\source\
    Copy-Item intune\Install.ps1 intune\source\
    Copy-Item intune\Uninstall.ps1 intune\source\
    ```
