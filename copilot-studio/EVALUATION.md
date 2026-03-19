@@ -1,17 +1,45 @@
 # COBOL Banker — Evaluation Test Plan
 
-> **Usage:** Use these test cases in Copilot Studio's **Evaluation** feature to validate agent behavior after changing instructions, knowledge, or CUA tool settings. Each test has an input prompt, the expected agent behavior, and pass/fail criteria.
+> **Usage:** Use these test cases with Copilot Studio's **Evaluation** feature to validate agent behavior after changing instructions, knowledge, or CUA tool settings. Each test has an input prompt, the expected agent behavior, and pass/fail criteria.
 
 ---
 
-## How to Use
+## Setting Up Evaluation in Copilot Studio
 
-1. In Copilot Studio, go to **Evaluate** (left nav) → **+ New evaluation**.
-2. Add test cases using the **Input** and **Expected output** columns below.
-3. Run the evaluation against your agent.
-4. Review results — each test should meet the pass criteria described.
+### Prerequisites
 
-> **Important:** Reset the database (Menu 8 → 1 → Y → Y) before running evaluations to ensure consistent seed data.
+- Your agent is fully configured (Agent Instructions, CUA Tool Instructions, and Knowledge file are all applied — see [../README.md](../README.md)).
+- COBOL Banker is installed on the target Windows 365 machine (`C:\WoodgroveBank\cobol-banker.exe`).
+- The database has been reset to seed data (Menu 8 → 1 → Y → Y).
+
+### Step-by-Step: Create an Evaluation
+
+1. Open your agent in **Copilot Studio** (https://copilotstudio.microsoft.com).
+2. In the left navigation, click **Evaluate**.
+3. Click **+ New evaluation** at the top.
+4. Give it a name (e.g., "COBOL Banker — Full Regression").
+5. For each test case below, add a row:
+   - **Input**: Copy the prompt from the **Input** field in the test case.
+   - **Expected output**: Copy the **Pass criteria** text — this is what the AI-assisted scorer will compare against.
+6. Click **Run** to execute all test cases against the agent.
+7. Review results — Copilot Studio will show each test with a pass/fail assessment and the agent's actual response.
+
+### Tips for Effective Evaluations
+
+- **Reset the database before every evaluation run.** Log in → Menu 8 → option 1 → Y → Y. Without this, balances and statuses from previous tests will cause false failures.
+- **Run tests that modify data last.** Tests that freeze accounts or transfer funds change the database state. Run read-only tests (lookups, balance checks, transaction history) first.
+- **Run compound tests separately** if they conflict. Test 7.1 (fraud flow) freezes Jane Doe's savings — any subsequent test on that account will see "Frozen" instead of "Active".
+- **Use focused evaluations for iteration.** You don't need to run all 22 tests every time. After changing Agent Instructions, run the behavioral guardrail tests (Suite 9). After changing CUA Tool Instructions, run the launch/navigation tests (Suites 1, 8).
+
+### When to Run Evaluations
+
+| Trigger | Which tests to run |
+|---------|--------------------|
+| Changed **Agent Instructions** | Suites 7 (compound), 9 (guardrails), plus any scenario you modified |
+| Changed **CUA Tool Instructions** | Suites 1 (launch/login), 8 (edge cases/recovery) |
+| Changed **Knowledge** file | Suites 2 (lookup), 3 (inquiry), 6 (transaction history) |
+| Updated the **app itself** (new build) | All suites — full regression |
+| Before a **live demo** | Quick smoke test: Tests 1.2, 2.1, 4.1, 5.1 (login, lookup, transfer, freeze) |
 
 ---
 
@@ -270,3 +298,18 @@
 | **Fail** | Agent refused the task, reported wrong data, got stuck, or hallucinated information not on screen. |
 
 > **Target:** All tests should pass on a clean run after a database reset. If a test fails consistently, review the Agent Instructions for missing guidance on that scenario.
+
+---
+
+## Troubleshooting Common Failures
+
+| Symptom | Likely cause | Fix |
+|---------|-------------|-----|
+| Agent refuses to freeze/close an account | LLM safety training overriding instructions | Strengthen the "This Is a Demo Environment" section in Agent Instructions — add explicit mention of the refused action |
+| Agent adds "Are you sure?" before acting | Double-confirmation habit | Add/reinforce "Do not add your own layer of confirmation" in Agent Instructions |
+| Agent can't find or launch the app | CUA can't locate the window or path | Check CUA Tool Instructions — verify the window title, exe path, and launch method are correct |
+| Agent types into the wrong input mode | Confused between text-box input and any-key dismiss | Verify the "Two Input Modes" section in CUA Tool Instructions clearly distinguishes the two |
+| Agent reports wrong balance or data | Stale database (previous test changed data) | Reset the database before the evaluation run |
+| Agent gets stuck on a screen | Missing navigation recovery instructions | Add the stuck screen to the Recovery section in Agent Instructions |
+| Agent hallucinates customer data | Knowledge file not uploaded or outdated | Re-upload KNOWLEDGE.md as a Knowledge source in Copilot Studio |
+| Agent works in test but fails in demo | Different machine, app not installed, or different screen resolution | Verify app is installed on the demo machine and CUA can see the window at the expected size |
