@@ -69,6 +69,18 @@ Follow these steps to get COBOL Banker running on a Windows 365 Cloud PC with a 
 
 4. Point the agent at the **Windows 365 Cloud PC** where the app is deployed.
 
+5. **Set the model** to **Claude Sonnet 4.5** (or newer). This is a vision-heavy, instruction-following task — fast chat-tier models with strong vision outperform reasoning models here. Avoid reasoning-class models (GPT-5 Reasoning, Claude Opus) as they add latency with no benefit for UI navigation.
+
+   | Model | Recommendation |
+   |-------|---------------|
+   | Claude Sonnet 4.5 / 4.6 | Recommended — fast, accurate vision, strong instruction compliance |
+   | GPT-4.1 | Good alternative — solid vision, fast |
+   | GPT-5 Chat | Worth testing — newer, potentially better vision |
+   | GPT-5 Auto / Reasoning | Not recommended — reasoning overhead adds latency with no benefit |
+   | Claude Opus 4.6 | Not recommended — overkill for menu navigation |
+
+6. **Disable web search.** The agent has everything it needs in the Knowledge file and instructions. Web search adds latency, risks injecting irrelevant context, and would be a compliance concern in any banking demo narrative.
+
 > **Tip — Stale connections:** The Windows 365 / CUA connection token can expire when the Cloud PC session disconnects or restarts. If the agent prompts you to re-authenticate: go to **Settings → Connections** in Copilot Studio, find the Windows 365 connection, and click to refresh it. Do this proactively before demos.
 
 ---
