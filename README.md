@@ -119,11 +119,19 @@ Use the built-in **Evaluation** feature in Copilot Studio to validate the agent 
 
 1. In Copilot Studio, open your agent and click **Evaluate** in the left nav.
 2. Click **+ New evaluation** → **Import**.
-3. Select [`copilot-studio/evaluation.csv`](copilot-studio/evaluation.csv) from this repo. It contains 22 pre-built test cases covering login, lookups, transfers, freezes, transaction analysis, compound requests, and edge cases.
-4. Name it (e.g., "COBOL Banker — Full Regression") and click **Run**.
-5. Review pass/fail results. For detailed expected behavior and troubleshooting, see [`copilot-studio/EVALUATION.md`](copilot-studio/EVALUATION.md).
+3. Import the test batches one at a time (run in order, wait for each to finish):
 
-> **Before running:** Reset the database to seed data (Step 4) so balances and statuses match the expected results.
+   | CSV File | Tests | What It Covers |
+   |----------|-------|---------------|
+   | [`evaluation-1-smoke.csv`](copilot-studio/evaluation-1-smoke.csv) | 5 | Launch, login, basic lookup, balance check |
+   | [`evaluation-2-readonly.csv`](copilot-studio/evaluation-2-readonly.csv) | 7 | Lookups, transaction history, error handling |
+   | [`evaluation-3-write.csv`](copilot-studio/evaluation-3-write.csv) | 7 | Transfers, freezes, contact updates, notes |
+   | [`evaluation-4-compound.csv`](copilot-studio/evaluation-4-compound.csv) | 4 | Multi-step workflows, behavioral guardrails |
+
+4. Reset the database (Step 4) before running batches 3 and 4.
+5. For detailed expected behavior and troubleshooting, see [`copilot-studio/EVALUATION.md`](copilot-studio/EVALUATION.md).
+
+> **Important:** Don't run multiple evaluations simultaneously — they share the same CUA connection. Run one batch, wait for it to finish, then start the next.
 
 ---
 
@@ -139,7 +147,10 @@ Use the built-in **Evaluation** feature in Copilot Studio to validate the agent 
 │   ├── AGENT-INSTRUCTIONS.md  ← Paste into Agent Instructions
 │   ├── CUA-TOOL-INSTRUCTIONS.md ← Paste into CUA Tool Instructions
 │   ├── EVALUATION.md          ← Test plan & troubleshooting guide
-│   └── evaluation.csv         ← Import into Copilot Studio Evaluate
+│   ├── evaluation-1-smoke.csv ← Smoke test (5 tests)
+│   ├── evaluation-2-readonly.csv ← Read-only tests (7 tests)
+│   ├── evaluation-3-write.csv ← Write/state-change tests (7 tests)
+│   └── evaluation-4-compound.csv ← Compound & behavioral tests (4 tests)
 ├── src/                       ← C# / .NET 8 WPF source code
 ├── dist/                      ← Pre-built exe + database
 └── intune/                    ← Intune deployment packaging

@@ -14,17 +14,27 @@
 
 ### Step-by-Step: Create an Evaluation
 
-**Option A — Import the CSV (recommended):**
+The test cases are split into 4 CSV files designed to be run as separate evaluations. This avoids overloading the CUA connection — running too many CUA tests in a single batch can exhaust the connection token and cause cascading failures.
+
+| CSV File | Tests | What It Covers | Run Time |
+|----------|-------|---------------|----------|
+| [`evaluation-1-smoke.csv`](evaluation-1-smoke.csv) | 5 | Launch, login, basic lookup, balance check, bad login | ~5 min |
+| [`evaluation-2-readonly.csv`](evaluation-2-readonly.csv) | 7 | Lookups, inquiries, transaction history, error handling | ~10 min |
+| [`evaluation-3-write.csv`](evaluation-3-write.csv) | 7 | Transfers, freezes, contact updates, notes, DB reset | ~15 min |
+| [`evaluation-4-compound.csv`](evaluation-4-compound.csv) | 4 | Multi-step workflows, behavioral guardrails | ~15 min |
+
+**To import a batch:**
 
 1. Open your agent in **Copilot Studio** (https://copilotstudio.microsoft.com).
 2. In the left navigation, click **Evaluate**.
-3. Click **+ New evaluation** at the top.
-4. Click **Import** and select [`evaluation.csv`](evaluation.csv) from this folder.
-   - The CSV contains 22 pre-built test cases with questions and expected responses.
-5. Give the evaluation a name (e.g., "COBOL Banker — Full Regression").
-6. Configure test methods if desired (match, similarity, compare meaning). The default test method is applied automatically on import.
-7. Click **Run** to execute all test cases against the agent.
-8. Review results — Copilot Studio will show each test with a pass/fail assessment and the agent's actual response.
+3. Click **+ New evaluation** → **Import**.
+4. Select one of the CSV files above.
+5. Name it to match the file (e.g., "1 — Smoke Test", "2 — Read-Only").
+6. Configure test methods if desired. The default test method is applied automatically on import.
+7. Click **Run** to execute the batch.
+8. **Wait for the batch to finish before running the next one.** Don't run multiple evaluations simultaneously — they share the same CUA connection.
+
+**Run order:** Always run in numbered order (1 → 2 → 3 → 4). Reset the database before batches 3 and 4 since they modify data.
 
 **Option B — Add test cases manually:**
 
@@ -33,8 +43,6 @@
    - **Input**: Copy the prompt from the **Input** field.
    - **Expected output**: Copy the **Pass criteria** text.
 3. Click **Run** and review results.
-
-> **CSV limitations:** Max 100 questions, max 500 characters per question. The CSV includes all tests that can be expressed as a single question/response pair. Tests with pre-conditions (like 8.1 — app not running) are included but may need the pre-condition set up manually before running.
 
 ### Tips for Effective Evaluations
 
