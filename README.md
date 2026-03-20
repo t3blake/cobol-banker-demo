@@ -69,6 +69,8 @@ Follow these steps to get COBOL Banker running on a Windows 365 Cloud PC with a 
 
 4. Point the agent at the **Windows 365 Cloud PC** where the app is deployed.
 
+> **Tip — Stale connections:** The Windows 365 / CUA connection token can expire when the Cloud PC session disconnects or restarts. If the agent prompts you to re-authenticate: go to **Settings → Connections** in Copilot Studio, find the Windows 365 connection, and click to refresh it. Do this proactively before demos.
+
 ---
 
 ### Step 3: Test It
@@ -99,6 +101,20 @@ Or tell the agent: *"Reset the banking database to its default state."*
 
 ---
 
+### Step 5: Evaluate the Agent (Optional)
+
+Use the built-in **Evaluation** feature in Copilot Studio to validate the agent works correctly.
+
+1. In Copilot Studio, open your agent and click **Evaluate** in the left nav.
+2. Click **+ New evaluation** → **Import**.
+3. Select [`copilot-studio/evaluation.csv`](copilot-studio/evaluation.csv) from this repo. It contains 22 pre-built test cases covering login, lookups, transfers, freezes, transaction analysis, compound requests, and edge cases.
+4. Name it (e.g., "COBOL Banker — Full Regression") and click **Run**.
+5. Review pass/fail results. For detailed expected behavior and troubleshooting, see [`copilot-studio/EVALUATION.md`](copilot-studio/EVALUATION.md).
+
+> **Before running:** Reset the database to seed data (Step 4) so balances and statuses match the expected results.
+
+---
+
 ## Repository Structure
 
 ```
@@ -109,7 +125,9 @@ Or tell the agent: *"Reset the banking database to its default state."*
 ├── copilot-studio/            ← Ready-to-paste Copilot Studio content
 │   ├── KNOWLEDGE.md           ← Upload as Knowledge file
 │   ├── AGENT-INSTRUCTIONS.md  ← Paste into Agent Instructions
-│   └── CUA-TOOL-INSTRUCTIONS.md ← Paste into CUA Tool Instructions
+│   ├── CUA-TOOL-INSTRUCTIONS.md ← Paste into CUA Tool Instructions
+│   ├── EVALUATION.md          ← Test plan & troubleshooting guide
+│   └── evaluation.csv         ← Import into Copilot Studio Evaluate
 ├── src/                       ← C# / .NET 8 WPF source code
 ├── dist/                      ← Pre-built exe + database
 └── intune/                    ← Intune deployment packaging
@@ -165,6 +183,7 @@ Copy-Item intune\Uninstall.ps1  intune\source\
 
 - [AGENT-GUIDE.md](AGENT-GUIDE.md) — Complete technical reference for every screen, input flow, edge case, and seed data. The authoritative source.
 - [DEMO-WALKTHROUGH.md](DEMO-WALKTHROUGH.md) — Three fully scripted demo scenarios (fraud investigation, address change, fund transfer) with talking points for live demos.
+- [copilot-studio/EVALUATION.md](copilot-studio/EVALUATION.md) — 22-test evaluation plan with Copilot Studio setup instructions, scoring guide, and troubleshooting common failures.
 - [DESIGN.md](DESIGN.md) — Architecture decisions, tech stack rationale, database schema, and versioning strategy.
 - [intune/README.md](intune/README.md) — Intune packaging details and configuration reference.
 
