@@ -13,15 +13,28 @@ Follow these steps to get COBOL Banker running on a Windows 365 Cloud PC with a 
 ### Prerequisites
 
 - A **Windows 365 Cloud PC** (or any Windows machine for local testing)
-- **Microsoft Intune** access (to deploy the app to the Cloud PC)
+- **Microsoft Intune** access (only if deploying via Intune — not needed for manual install)
 - **Copilot Studio** access (to create the agent)
 - **Git** (to clone this repo)
 
 ---
 
-### Step 1: Deploy the App via Intune
+### Step 1: Deploy the App
 
-1. Go to the [latest release](https://github.com/t3blake/cobol-banker-demo/releases/latest) and download **Install.intunewin**.
+Go to the [latest release](https://github.com/t3blake/cobol-banker-demo/releases/latest) and choose one of these install methods:
+
+#### Option A: Manual Install (quickest)
+
+1. Download **WoodgroveBank.zip** from the release.
+2. Extract the zip.
+3. Right-click **Install.ps1** → **Run with PowerShell** (or run from an admin terminal: `powershell -ExecutionPolicy Bypass -File Install.ps1`).
+4. The script installs to `C:\WoodgroveBank\` and creates a desktop shortcut called "Woodgrove Bank Terminal".
+
+> **Even simpler:** If you just want to test locally, extract `cobol-banker.exe` and `cobol-banker.db` into `C:\WoodgroveBank\` manually. The agent instructions expect this exact path.
+
+#### Option B: Deploy via Intune
+
+1. Download **Install.intunewin** from the release.
 
 2. In the **Microsoft Intune admin center**, go to **Apps → Windows → Add → Windows app (Win32)**.
 
