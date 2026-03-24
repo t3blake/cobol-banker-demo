@@ -9,11 +9,8 @@ $ErrorActionPreference = "Stop"
 $appName    = "Woodgrove Bank Terminal"
 $installDir = "C:\WoodgroveBank"
 $exeName    = "cobol-banker.exe"
-$dbName     = "cobol-banker.db"
 $srcExe     = Join-Path $PSScriptRoot $exeName
-$srcDb      = Join-Path $PSScriptRoot $dbName
 $destExe    = Join-Path $installDir $exeName
-$destDb     = Join-Path $installDir $dbName
 $shortcut   = Join-Path "$env:Public\Desktop" "$appName.lnk"
 
 # ── Install ──────────────────────────────────────────────────
@@ -28,9 +25,6 @@ if (-not (Test-Path $installDir)) {
 # Copy the exe and database
 Copy-Item -Path $srcExe -Destination $destExe -Force
 Write-Host "  Copied $exeName to $installDir"
-
-Copy-Item -Path $srcDb -Destination $destDb -Force
-Write-Host "  Copied $dbName to $installDir"
 
 # Create desktop shortcut (Public Desktop = all users)
 $ws = New-Object -ComObject WScript.Shell

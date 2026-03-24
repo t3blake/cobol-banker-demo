@@ -45,7 +45,6 @@ jobs:
         run: |
           New-Item -ItemType Directory -Path staging -Force | Out-Null
           Copy-Item dist/cobol-banker.exe staging/
-          Copy-Item dist/cobol-banker.db  staging/
           Copy-Item intune/Install.ps1    staging/
           Copy-Item intune/Uninstall.ps1  staging/
           Compress-Archive -Path staging/* -DestinationPath dist/ManualInstall.zip
@@ -64,7 +63,6 @@ jobs:
           New-Item -ItemType Directory -Path intune/source -Force | Out-Null
           New-Item -ItemType Directory -Path intune/output -Force | Out-Null
           Copy-Item dist/cobol-banker.exe intune/source/ -Force
-          Copy-Item dist/cobol-banker.db  intune/source/ -Force
           Copy-Item intune/Install.ps1    intune/source/ -Force
           Copy-Item intune/Uninstall.ps1  intune/source/ -Force
           & ./IntuneWinAppUtil.exe -c intune/source -s Install.ps1 -o intune/output -q

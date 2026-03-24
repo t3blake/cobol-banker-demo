@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────
 # Woodgrove Bank Terminal — Package Script
 # Builds the app from source and creates release artifacts:
-#   1. WoodgroveBank.zip   — manual install (exe + db + Install.ps1)
+#   1. ManualInstall.zip   — manual install (exe + Install.ps1)
 #   2. Install.intunewin   — Intune Win32 package
 # ─────────────────────────────────────────────────────────────
 
@@ -38,7 +38,6 @@ if (Test-Path $zipStaging) { Remove-Item $zipStaging -Recurse -Force }
 New-Item -ItemType Directory -Path $zipStaging | Out-Null
 
 Copy-Item (Join-Path $distDir "cobol-banker.exe") $zipStaging
-Copy-Item (Join-Path $distDir "cobol-banker.db")  $zipStaging
 Copy-Item (Join-Path $intuneDir "Install.ps1")    $zipStaging
 Copy-Item (Join-Path $intuneDir "Uninstall.ps1")  $zipStaging
 
@@ -59,7 +58,6 @@ if (Test-Path $intuneUtil) {
     # Stage files
     if (-not (Test-Path $srcStaging)) { New-Item -ItemType Directory -Path $srcStaging | Out-Null }
     Copy-Item (Join-Path $distDir "cobol-banker.exe") $srcStaging -Force
-    Copy-Item (Join-Path $distDir "cobol-banker.db")  $srcStaging -Force
     Copy-Item (Join-Path $intuneDir "Install.ps1")    $srcStaging -Force
     Copy-Item (Join-Path $intuneDir "Uninstall.ps1")  $srcStaging -Force
 
