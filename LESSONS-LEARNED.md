@@ -1,6 +1,6 @@
 # COBOL Banker — Lessons Learned
 
-A living document capturing what we've learned while building, tuning, and demoing the COBOL Banker app and its Copilot Studio computer-use agent. Aimed at anyone setting up their own instance — whether you're a fellow CSA running the demo or a customer exploring CUA capabilities.
+A living document capturing what we've learned while building, tuning, and demoing the COBOL Banker app and its Copilot Studio computer-use agent. Aimed at anyone setting up their own instance — whether you're a colleague running the demo or exploring CUA capabilities on your own.
 
 > **Contributing:** Add new entries to the relevant section with a date and brief description. Keep entries concise and actionable — focus on what you tried, what happened, and what worked.
 
