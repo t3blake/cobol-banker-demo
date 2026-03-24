@@ -25,7 +25,7 @@ Go to the [latest release](https://github.com/t3blake/cobol-banker-demo/releases
 
 #### Option A: Manual Install (quickest)
 
-1. Download **WoodgroveBank.zip** from the release.
+1. Download **ManualInstall.zip** from the release.
 2. Extract the zip.
 3. Right-click **Install.ps1** → **Run with PowerShell** (or run from an admin terminal: `powershell -ExecutionPolicy Bypass -File Install.ps1`).
 4. The script installs to `C:\WoodgroveBank\` and creates a desktop shortcut called "Woodgrove Bank Terminal".

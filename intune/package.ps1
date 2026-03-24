@@ -13,7 +13,7 @@ $srcDir     = Join-Path $repoRoot "src"
 $distDir    = Join-Path $repoRoot "dist"
 $srcStaging = Join-Path $intuneDir "source"
 $outDir     = Join-Path $intuneDir "output"
-$zipPath    = Join-Path $distDir "WoodgroveBank.zip"
+$zipPath    = Join-Path $distDir "ManualInstall.zip"
 
 # ── Build ────────────────────────────────────────────────────
 
