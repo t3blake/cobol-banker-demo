@@ -4,9 +4,8 @@
 # ─────────────────────────────────────────────────────────────
 
 $exePath = "C:\WoodgroveBank\cobol-banker.exe"
-$dbPath  = "C:\WoodgroveBank\cobol-banker.db"
 
-if ((Test-Path $exePath) -and (Test-Path $dbPath)) {
+if (Test-Path $exePath) {
     Write-Output "Detected: $exePath"
     exit 0
 } else {
