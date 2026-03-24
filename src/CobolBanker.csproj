@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>CobolBanker</RootNamespace>
     <AssemblyName>cobol-banker</AssemblyName>
-    <Version>1.1.0</Version>
+    <Version>1.3.0</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Single-file self-contained publish -->

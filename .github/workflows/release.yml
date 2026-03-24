@@ -1,0 +1,82 @@
+name: Build and Release
+
+# ── TRIGGER ──────────────────────────────────────────────────
+# Runs when you push a version tag like v1.3.0
+# Usage:  git tag v1.3.0 && git push origin v1.3.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+# ── PERMISSIONS ──────────────────────────────────────────────
+# The workflow needs write access to create GitHub releases
+permissions:
+  contents: write
+
+# ── JOBS ─────────────────────────────────────────────────────
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: windows-latest    # Needed for .NET WPF + IntuneWinAppUtil.exe
+
+    steps:
+      # 1. Check out the repo (includes the tag ref)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Install the .NET 8 SDK
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # 3. Build the self-contained single-file exe
+      - name: Publish app
+        run: |
+          dotnet publish src/CobolBanker.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained `
+            /p:PublishSingleFile=true `
+            -o dist
+
+      # 4. Create ManualInstall.zip (exe + db + install/uninstall scripts)
+      - name: Package zip
+        run: |
+          New-Item -ItemType Directory -Path staging -Force | Out-Null
+          Copy-Item dist/cobol-banker.exe staging/
+          Copy-Item dist/cobol-banker.db  staging/
+          Copy-Item intune/Install.ps1    staging/
+          Copy-Item intune/Uninstall.ps1  staging/
+          Compress-Archive -Path staging/* -DestinationPath dist/ManualInstall.zip
+
+      # 5. Download the Intune Win32 packaging tool (latest release from Microsoft)
+      - name: Download IntuneWinAppUtil
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/Microsoft-Win32-Content-Prep-Tool/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -like "*.exe" } | Select-Object -First 1
+          Write-Host "Downloading $($asset.name) from $($asset.browser_download_url)"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "IntuneWinAppUtil.exe"
+
+      # 6. Create the Intune package
+      - name: Package Intune
+        run: |
+          New-Item -ItemType Directory -Path intune/source -Force | Out-Null
+          New-Item -ItemType Directory -Path intune/output -Force | Out-Null
+          Copy-Item dist/cobol-banker.exe intune/source/ -Force
+          Copy-Item dist/cobol-banker.db  intune/source/ -Force
+          Copy-Item intune/Install.ps1    intune/source/ -Force
+          Copy-Item intune/Uninstall.ps1  intune/source/ -Force
+          & ./IntuneWinAppUtil.exe -c intune/source -s Install.ps1 -o intune/output -q
+          Write-Host "Intune package created"
+
+      # 7. Create the GitHub release and attach artifacts
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "COBOL Banker ${{ github.ref_name }}"
+          draft: false
+          generate_release_notes: true
+          files: |
+            dist/ManualInstall.zip
+            intune/output/Install.intunewin
