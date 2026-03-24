@@ -49,13 +49,12 @@ jobs:
           Copy-Item intune/Uninstall.ps1  staging/
           Compress-Archive -Path staging/* -DestinationPath dist/ManualInstall.zip
 
-      # 5. Download the Intune Win32 packaging tool (latest release from Microsoft)
+      # 5. Download the Intune Win32 packaging tool from Microsoft's repo
       - name: Download IntuneWinAppUtil
         run: |
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/Microsoft-Win32-Content-Prep-Tool/releases/latest"
-          $asset = $release.assets | Where-Object { $_.name -like "*.exe" } | Select-Object -First 1
-          Write-Host "Downloading $($asset.name) from $($asset.browser_download_url)"
-          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "IntuneWinAppUtil.exe"
+          $url = "https://raw.githubusercontent.com/microsoft/Microsoft-Win32-Content-Prep-Tool/master/IntuneWinAppUtil.exe"
+          Write-Host "Downloading IntuneWinAppUtil.exe from $url"
+          Invoke-WebRequest -Uri $url -OutFile "IntuneWinAppUtil.exe"
 
       # 6. Create the Intune package
       - name: Package Intune
