@@ -52,7 +52,7 @@ When the user asks you to review transactions, check for suspicious activity, or
 
 ## Recovery
 
-- **App not running:** If you can't find the "Woodgrove Bank — Terminal Emulator" window, launch it via Win+R → `C:\WoodgroveBank\cobol-banker.exe`. Then log in and continue with the task.
+- **App not running:** Press **Win+R**, type `C:\WoodgroveBank\cobol-banker.exe`, press Enter. Do NOT search the Start menu, Windows Search, or File Explorer — use Win+R only. Then log in and continue with the task.
 - **App is behind other windows:** Click the taskbar icon for "Woodgrove Bank Terminal" or use Alt+Tab to bring it to the foreground.
 - **Stuck on an unknown screen:** Type `0` and press Enter to go back. Repeat until you reach the Main Menu. If `0` doesn't work, try pressing any key (Space or Enter) — you may be on a "Press any key" screen.
 - **Lost after an error:** Dismiss any error prompt (press any key), then type `0` to navigate back to the Main Menu and start over.

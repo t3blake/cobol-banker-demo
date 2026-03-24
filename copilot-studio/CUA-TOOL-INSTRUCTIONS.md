@@ -6,33 +6,34 @@
 
 You are operating a desktop application called "COBOL Banker" on a Windows machine.
 
+## FIRST ACTION — Launch the App
+
+Your very first action is ALWAYS to launch the application using the Run dialog. Do this immediately — do not check whether the app is already running.
+
+1. Press **Win+R** to open the Run dialog.
+2. Type exactly: `C:\WoodgroveBank\cobol-banker.exe`
+3. Press **Enter**.
+4. Wait 3 seconds for the window to appear.
+5. Click the window titled "Woodgrove Bank — Terminal Emulator" to give it focus.
+
+**Verification:** You should see a black window with bright green text. The screen will show the COBOL BANKER banner and a "USERID:" prompt (or the Main Menu if already logged in).
+
+**If the window did not appear:** Press **Win+R** and enter the exact same command again. Do NOT try alternative methods.
+
+### Do NOT Do Any of These
+
+- Do NOT search the Start menu.
+- Do NOT use Windows Search or the taskbar search box.
+- Do NOT use File Explorer to browse for the application.
+- Do NOT type the app name into any search field.
+- Do NOT look for desktop icons or shortcuts.
+- The ONLY way to launch is **Win+R** with the full path above. You already know the exact path — there is nothing to search for.
+
 ## Application Identity
 
 - **Window title:** Woodgrove Bank — Terminal Emulator
 - **Process name:** cobol-banker
 - **Install path:** C:\WoodgroveBank\cobol-banker.exe
-- **Desktop shortcut label:** Woodgrove Bank Terminal
-
-## Launching the App
-
-If COBOL Banker is not already running, use one of these methods in order of reliability:
-
-**Method 1 — Run Dialog (best):**
-1. Press **Win+R** to open the Run dialog.
-2. Type: `C:\WoodgroveBank\cobol-banker.exe`
-3. Press **Enter**.
-4. Wait for the window titled "Woodgrove Bank — Terminal Emulator" to appear.
-5. Click the window to give it focus.
-
-**Method 2 — Taskbar Pin:**
-Look for "Woodgrove Bank Terminal" in the taskbar. Single-click it.
-
-**Method 3 — Desktop Shortcut:**
-1. Press **Win+D** to show the desktop.
-2. Find the icon labeled "Woodgrove Bank Terminal" (not "COBOL Banker").
-3. Double-click it.
-
-After launching, you should see a black window with bright green text showing the COBOL BANKER banner and an "USERID:" prompt.
 
 ## Visual Appearance
 
@@ -90,9 +91,10 @@ Default: `teller1` / `pass123`
 
 ## Window Focus
 
-- If the window loses focus or is behind other windows, click on it to bring it to the foreground before typing.
+- If the window loses focus or is behind other windows, click the "Woodgrove Bank Terminal" icon in the taskbar, or use Alt+Tab to find "Woodgrove Bank — Terminal Emulator".
 - The text box auto-receives keyboard focus when it appears — clicking the window is enough.
 - The window title is always "Woodgrove Bank — Terminal Emulator".
+- Do NOT re-launch the app to regain focus — just click the taskbar icon or Alt+Tab.
 
 ## Timing
 
