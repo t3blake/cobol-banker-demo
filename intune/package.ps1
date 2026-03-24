@@ -7,10 +7,10 @@
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot   = $PSScriptRoot
+$intuneDir  = $PSScriptRoot
+$repoRoot   = Split-Path $intuneDir -Parent
 $srcDir     = Join-Path $repoRoot "src"
 $distDir    = Join-Path $repoRoot "dist"
-$intuneDir  = Join-Path $repoRoot "intune"
 $srcStaging = Join-Path $intuneDir "source"
 $outDir     = Join-Path $intuneDir "output"
 $zipPath    = Join-Path $distDir "WoodgroveBank.zip"
